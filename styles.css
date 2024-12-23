@@ -1,0 +1,89 @@
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    background-image: url('images/page\ acceil.png'); /* Ensure the path is correct */
+    background-size: cover; /* Ensure the image covers the entire background */
+    background-position: center; /* Center the background image */
+    background-attachment: fixed; /* Make the background image fixed */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+}
+
+.navbar {
+    background-color: #007bff; /* Changed to a vibrant blue */
+    color: #fff;
+    padding: 0.5rem 1rem; /* Reduced padding to make the navbar less tall */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-size: 1.5rem; /* Reduced font size */
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar-nav {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item {
+    margin-left: 1rem; /* Reduced margin */
+}
+
+.nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem; /* Reduced font size */
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.title-container {
+    background-color: #fff; /* White background */
+    padding: 1rem 2rem; /* Padding for spacing */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Centered text */
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: red; /* Changed to red */
+    text-align: center; /* Centered the heading */
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-item {
+        margin: 0.5rem 0;
+    }
+}
