@@ -2,12 +2,28 @@
 session_start();
 require_once 'config.php'; 
 
+// Use environment variables for database connection
+putenv('DB_HOST=nicolavnicolas.mysql.db');
+putenv('DB_NAME=nicolavnicolas');
+putenv('DB_USER=nicolavnicolas');
+putenv('DB_PASSWORD=Rex220405');
+
+$mysqli = new mysqli(getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASSWORD'), getenv('DB_NAME'));
+
+// Check connection
+if ($mysqli->connect_error) {
+    die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+}
+
 $userName = null;
 $isPrime = false;
 
 if (isset($_SESSION['id'])) {
     $sql = 'SELECT fname, is_prime FROM users WHERE id = ?';
     $stmt = $mysqli->prepare($sql);
+    if ($stmt === false) {
+        die('Prepare Error: ' . $mysqli->error);
+    }
     $stmt->bind_param('i', $_SESSION['id']);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -26,8 +42,11 @@ if (isset($_SESSION['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $message = $_POST['update'];
     $userId = $_SESSION['id'];
-    $sql = 'INSERT INTO updates (user_id, message, created_at, vote) VALUES (?, ?, NOW(), 0)';
+    $sql = 'INSERT INTO NG_Update (user_id, message, created_at, vote) VALUES (?, ?, NOW(), 0)';
     $stmt = $mysqli->prepare($sql);
+    if ($stmt === false) {
+        die('Prepare Error: ' . $mysqli->error);
+    }
     $stmt->bind_param('is', $userId, $message);
     $stmt->execute();
     $stmt->close();
@@ -41,8 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vote'])) {
     $userId = $_SESSION['id'];
 
     // Vérifier si l'utilisateur a déjà voté pour cette mise à jour
-    $sql = 'SELECT vote FROM updates WHERE id = ?';
+    $sql = 'SELECT vote FROM NG_Update WHERE id = ?';
     $stmt = $mysqli->prepare($sql);
+    if ($stmt === false) {
+        die('Prepare Error: ' . $mysqli->error);
+    }
     $stmt->bind_param('i', $updateId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -51,15 +73,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vote'])) {
 
     if ($existingVote === null) {
         // Si pas encore voté, mettre à jour le compteur de votes
-        $sql = 'UPDATE updates SET vote = vote + ? WHERE id = ?';
+        $sql = 'UPDATE NG_Update SET vote = vote + ? WHERE id = ?';
         $stmt = $mysqli->prepare($sql);
+        if ($stmt === false) {
+            die('Prepare Error: ' . $mysqli->error);
+        }
         $stmt->bind_param('ii', $vote, $updateId);
         $stmt->execute();
         $stmt->close();
     } elseif ($existingVote != $vote) {
         // Mettre à jour le vote si l'utilisateur change d'avis
-        $sql = 'UPDATE updates SET vote = vote + ? - ? WHERE id = ?';
+        $sql = 'UPDATE NG_Update SET vote = vote + ? - ? WHERE id = ?';
         $stmt = $mysqli->prepare($sql);
+        if ($stmt === false) {
+            die('Prepare Error: ' . $mysqli->error);
+        }
         $stmt->bind_param('iii', $vote, $existingVote, $updateId);
         $stmt->execute();
         $stmt->close();
@@ -67,11 +95,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vote'])) {
 }
 
 // Récupération des patch notes
-$sql = 'SELECT updates.id, updates.message, updates.created_at, users.username, updates.vote 
-        FROM updates 
-        JOIN users ON updates.user_id = users.id 
-        ORDER BY updates.created_at DESC';
+$sql = 'SELECT NG_Update.id, NG_Update.message, NG_Update.created_at, users.username, NG_Update.vote 
+        FROM NG_Update 
+        JOIN users ON NG_Update.user_id = users.id 
+        ORDER BY NG_Update.created_at DESC';
 $result = $mysqli->query($sql);
+if ($result === false) {
+    die('Query Error: ' . $mysqli->error);
+}
 $patchNotes = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -83,102 +114,9 @@ $patchNotes = $result->fetch_all(MYSQLI_ASSOC);
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            background-color: #f8f9fa;
-            color: #343a40;
-        }
-        .developer {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .current-date {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            font-size: 14px;
-        }
-        .centered-bold {
-            text-align: center;
-            font-weight: bold;
-            font-size: 36px;
-            margin-bottom: 30px;
-            color: #007bff;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .patch-note-container {
-            position: relative;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .patch-note-container .card-body {
-            position: relative;
-        }
-        .formatted-text ul {
-            padding-left: 20px;
-        }
-        .formatted-text ul li {
-            list-style-type: disc;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .formatted-text .highlight {
-            text-align: center;
-            font-weight: bold;
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
-        .vote-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .vote-buttons .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 20px;
-            transition: transform 0.2s;
-        }
-        .vote-buttons .btn-success:hover {
-            transform: scale(1.2);
-        }
-        .vote-buttons .btn-danger:hover {
-            transform: scale(1.2);
-        }
-        .home-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #007bff;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
+<?php include 'navbar.php'; ?>
 <a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
     <div class="container mt-5">
         <h1 class="centered-bold">Patch Notes</h1>

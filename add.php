@@ -33,6 +33,7 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
+include 'navbar.php';
 ?>
 
 <!DOCTYPE html>
@@ -44,31 +45,6 @@ $conn->close();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .navbar {
-            background-color: #343a40;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-brand {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        .nav-link {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 500;
-            font-size: 1rem;
-        }
-        body {
-            padding-top: 120px; /* Increased padding to prevent navbar from cutting off content */
-        }
-        .form-group {
-            margin-bottom: 20px; /* Add spacing between form groups */
-        }
-        option[value="Compresseur électrique"] {
-            color: gray;
-        }
-    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
