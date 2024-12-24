@@ -82,6 +82,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .centered-title {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -92,10 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom d'utilisateur</th>
-                        <th>Action</th>
-                        <th>Date</th>
+                        <th class="centered-title">ID</th>
+                        <th class="centered-title">Nom d'utilisateur</th>
+                        <th class="centered-title">Action</th>
+                        <th class="centered-title">Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -119,11 +124,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nom d'utilisateur</th>
-                        <th>Pays</th>
-                        <th>Action</th>
-                        <th>Date</th>
+                        <th class="centered-title">ID</th>
+                        <th class="centered-title">Nom d'utilisateur</th>
+                        <th class="centered-title">Pays</th>
+                        <th class="centered-title">Action</th>
+                        <th class="centered-title">Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,11 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Nom d'utilisateur</th>
-                        <th>Staff Site</th>
-                        <th>Dev Site</th>
-                        <th>Admin</th>
-                        <th>Gestion Pays</th>
+                        <th class="centered-title">Nom d'utilisateur</th>
+                        <th class="centered-title">Staff Site</th>
+                        <th class="centered-title">Dev Site</th>
+                        <th class="centered-title">Admin</th>
+                        <th class="centered-title">Gestion Pays</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -233,8 +238,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Nom d'utilisateur</th>
-                        <th>Date d'inscription</th>
+                        <th class="centered-title">Nom d'utilisateur</th>
+                        <th class="centered-title">Date d'inscription</th>
                     </tr>
                 </thead>
                 <tbody>

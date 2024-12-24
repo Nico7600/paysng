@@ -43,7 +43,7 @@ include 'navbar.php';
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            padding-top: 250px;
+            padding-top: 100px;
             background-image: url('images/fond craft.jpg');
             background-attachment: fixed;
             background-size: cover;
@@ -128,18 +128,22 @@ include 'navbar.php';
         }
         .search-container {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
+            align-items: center;
             position: fixed;
-            top: 70px;
-            left: 20px;
-            width: auto;
+            top: 70px; /* Adjusted to avoid overlapping with the navbar */
+            left: 0;
+            width: 100%;
             z-index: 1000;
-            padding: 10px 0;
-            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            background-color: transparent; /* Removed white area */
             <?php if ($dark_mode): ?>
-            background-color: rgba(18, 18, 18, 0.9);
+            background-color: transparent;
             <?php endif; ?>
+        }
+        .search-container form {
+            display: flex;
+            align-items: center;
         }
         .highlight {
             font-weight: bold;
@@ -188,6 +192,14 @@ include 'navbar.php';
         .home-button i {
             color: white;
         }
+        .btn-outline-secondary {
+            border-color: #6c757d;
+            color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: #ffffff;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
@@ -197,7 +209,7 @@ include 'navbar.php';
             <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Recherche" name="search" value="<?php echo htmlspecialchars($search); ?>">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
         </form>
-        <button id="darkModeToggle" class="btn btn-outline-secondary mt-2"><?php echo $dark_mode ? 'Light Mode' : 'Dark Mode'; ?></button>
+        <button id="darkModeToggle" class="btn btn-outline-secondary ml-2"><?php echo $dark_mode ? 'Mode Clair' : 'Mode Sombre'; ?></button>
     </div>
 
     <div class="container mt-5">
