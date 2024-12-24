@@ -215,7 +215,6 @@ include 'navbar.php';
                         <h5 class="card-title"><?php echo $craft['title']; ?></h5>
                         <p class="card-text"><strong>Se craft :</strong> <span class="<?php echo $craft['craft_type'] == 'Table de craft' ? 'craft-type-brown' : 'craft-type-red'; ?>"><?php echo $craft['craft_type']; ?></span></p>
                         <p class="card-text"><strong>Prérequis :</strong><br><?php echo nl2br($craft['prerequisites']); ?></p>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#editModal<?php echo $craft['id']; ?>">Modifier</button>
                     </div>
                 </div>
             </div>
@@ -255,7 +254,6 @@ include 'navbar.php';
             <div class="modal-content">
                 <form method="post" action="edit_craft.php">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel<?php echo $craft['id']; ?>">Modifier <?php echo $craft['title']; ?></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
                             <span aria-hidden="true">&times;</span>
                         </button>

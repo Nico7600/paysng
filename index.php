@@ -6,6 +6,7 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     unset($_SESSION['message']);
     unset($_SESSION['message_type']);
 }
+include 'navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -19,7 +20,6 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
     <div class="main-container mt-5">
         <?php 
         if (!empty($message)) {

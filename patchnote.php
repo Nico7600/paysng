@@ -116,8 +116,7 @@ $patchNotes = $result->fetch_all(MYSQLI_ASSOC);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-<?php include 'navbar.php'; ?>
-<a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
+    <a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
     <div class="container mt-5">
         <h1 class="centered-bold">Patch Notes</h1>
         <div class="patch-notes">

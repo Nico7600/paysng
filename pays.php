@@ -47,33 +47,6 @@ include 'navbar.php';
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Indonesie</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="http://indo.nicolasdeprets.online/craft">Craft</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Gestion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Offi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><?php echo $_SESSION['username']; ?></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
     <div class="main-container text-center">
         <div class="title-container">
             <h1>Gestion des Pays</h1>
