@@ -1,33 +1,40 @@
 body {
-    font-family: 'Ubuntu', sans-serif;
-    background: linear-gradient(135deg, #1f1c2c, #928dab);
-    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    background: #f3f4f6; /* Light grey background */
+    color: #111; /* Dark text color */
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align items to the top */
     height: 100vh;
+    overflow: auto; /* Allow scrolling */
 }
 
 h1, h2 {
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #111; /* Dark heading color */
+    text-shadow: none; /* Remove text shadow */
+    margin-bottom: 20px; /* Add some space below headings */
 }
 
 .container {
     max-width: 900px;
-    margin: auto;
+    margin: 50px auto; /* Add margin to the top and bottom */
     padding: 30px;
-    background: rgba(0, 0, 0, 0.7);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    background: #fff; /* White container background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light box shadow */
     border-radius: 10px;
+    overflow: hidden; /* Prevent content overflow */
+    animation: none; /* Remove fade-in animation */
 }
 
 .table {
     margin-top: 20px;
     width: 100%;
     border-collapse: collapse;
+    background: #fff; /* White table background */
+    border-radius: 10px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow */
 }
 
 .table th, .table td {
@@ -37,17 +44,17 @@ h1, h2 {
 }
 
 .table th {
-    background-color: #333;
-    color: #ffffff;
+    background-color: #232f3e; /* Amazon dark blue background for table headers */
+    color: #fff;
 }
 
 .table tr:hover {
-    background-color: #575757;
+    background-color: #f1f1f1; /* Lighten the hover effect */
 }
 
 .btn {
     margin-right: 5px;
-    background-color: #4CAF50;
+    background-color: #ff9900; /* Amazon orange button color */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -61,30 +68,38 @@ h1, h2 {
     transition: background-color 0.3s, transform 0.3s;
 }
 
+.btn.pays {
+    background-color: #28a745; /* Green for "oui" */
+}
+
+.btn.pays.nom {
+    background-color: #dc3545; /* Red for "nom" */
+}
+
 .btn:hover {
-    background-color: #45a049;
+    background-color: #e68a00; /* Darken the hover effect */
     transform: scale(1.05);
 }
 
 .alert {
     margin-top: 20px;
     padding: 20px;
-    background-color: #f44336;
+    background-color: #dc3545; /* Red background for alerts */
     color: white;
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Lighten the box shadow */
 }
 
 .alert.success {
-    background-color: #4CAF50;
+    background-color: #28a745; /* Green background for success alerts */
 }
 
 .alert.info {
-    background-color: #2196F3;
+    background-color: #17a2b8; /* Blue background for info alerts */
 }
 
 .alert.warning {
-    background-color: #ff9800;
+    background-color: #ffc107; /* Yellow background for warning alerts */
 }
 
 input[type="text"], input[type="password"] {
@@ -98,5 +113,25 @@ input[type="text"], input[type="password"] {
 }
 
 input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #4CAF50;
+    border-color: #ff9900; /* Change focus border color to Amazon orange */
+}
+
+.notification {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745; /* Green background for notifications */
+    color: white;
+    padding: 15px;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Lighten the box shadow */
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    animation: slideDown 0.5s ease-in-out;
+}
+
+@keyframes slideDown {
+    from { top: -50px; opacity: 0; }
+    to { top: 0; opacity: 1; }
 }
