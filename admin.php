@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'config.php';
 
 $servername = "nicolavnicolas.mysql.db";
 $username = "nicolavnicolas";
@@ -77,21 +78,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Page</title>
+    <title>Admin</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/admin-style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <?php include 'navbar.php'; ?>
-    </header>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Admin Panel</h1>
+        <h1 class="centered-bold">Admin Panel</h1>
         
         <div class="container mt-4">
-            <h2>Gestion Craft Global</h2>
+            <h2>Gestion Ajout craft wiki </h2>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -159,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
                 </thead>
                 <tbody>
                     <?php
-                    $users_sql = "SELECT Nom, Staff_site, Dev_site, Admin, Pays FROM NG_Pays";
+                    $users_sql = "SELECT Nom, Staff_site, Dev_site, Admin, Pays, Recrut, Membre, Officier, Chef FROM NG_Pays";
                     $users_result = $conn->query($users_sql);
                     if ($users_result->num_rows > 0) {
                         while ($row = $users_result->fetch_assoc()) {
@@ -194,27 +191,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
                                             <input type='hidden' name='username' value='{$row['Nom']}'>
                                             <input type='hidden' name='role' value='Pays'>
                                             <input type='hidden' name='current_value' value='{$row['Pays']}'> <!-- Assuming 'Pays' is a column in the database -->
-                                            <button type='submit' name='toggle_role' class='btn " . ($row['Pays'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Pays</button>
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Pays'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Pays (" . ($row['Pays'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
-                                            <input type='hidden' name='username' value='{$row['Nom']}'>
-                                            <input type='hidden' name='grade' value='Recrut'>
-                                            <button type='submit' name='change_grade' class='btn btn-info btn-sm'>Recrut</button>
+                                            <input type='hidden' name='username' value='{$row['Nom']}'> 
+                                            <input type='hidden' name='role' value='Recrut'>
+                                            <input type='hidden' name='current_value' value='{$row['Recrut']}'> 
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Recrut'] ? 'btn-info' : 'btn-secondary') . " btn-sm'>Recrut (" . ($row['Recrut'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
-                                            <input type='hidden' name='username' value='{$row['Nom']}'>
-                                            <input type='hidden' name='grade' value='Membre'>
-                                            <button type='submit' name='change_grade' class='btn btn-warning btn-sm'>Membre</button>
+                                            <input type='hidden' name='username' value='{$row['Nom']}'> 
+                                            <input type='hidden' name='role' value='Membre'>
+                                            <input type='hidden' name='current_value' value='{$row['Membre']}'> 
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Membre'] ? 'btn-warning' : 'btn-secondary') . " btn-sm'>Membre (" . ($row['Membre'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
-                                            <input type='hidden' name='username' value='{$row['Nom']}'>
-                                            <input type='hidden' name='grade' value='Officier'>
-                                            <button type='submit' name='change_grade' class='btn btn-danger btn-sm'>Officier</button>
+                                            <input type='hidden' name='username' value='{$row['Nom']}'> 
+                                            <input type='hidden' name='role' value='Officier'>
+                                            <input type='hidden' name='current_value' value='{$row['Officier']}'> 
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Officier'] ? 'btn-danger' : 'btn-secondary') . " btn-sm'>Officier (" . ($row['Officier'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
-                                            <input type='hidden' name='username' value='{$row['Nom']}'>
-                                            <input type='hidden' name='grade' value='Chef'>
-                                            <button type='submit' name='change_grade' class='btn btn-primary btn-sm'>Chef</button>
+                                            <input type='hidden' name='username' value='{$row['Nom']}'> 
+                                            <input type='hidden' name='role' value='Chef'>
+                                            <input type='hidden' name='current_value' value='{$row['Chef']}'> 
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Chef'] ? 'btn-primary' : 'btn-secondary') . " btn-sm'>Chef (" . ($row['Chef'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                     </td>
                                   </tr>";
@@ -227,6 +228,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
             </table>
         </div>
     </div>
+    <a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
     <div class="notification" id="notification"></div>
     <script>
         function showNotification(message) {
