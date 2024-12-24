@@ -12,12 +12,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (!isset($_SESSION['nom'])) {
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-$nom = $_SESSION['nom'];
+$nom = $_SESSION['username'];
 $sql = "SELECT * FROM NG_Pays WHERE Nom='$nom'";
 $result = $conn->query($sql);
 
@@ -37,6 +37,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,6 +46,7 @@ $conn->close();
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -70,7 +72,7 @@ $conn->close();
             </div>
         </div>
     </nav>
-    <div class="container text-center">
+    <div class="main-container text-center">
         <div class="title-container">
             <h1>Modifier Produit</h1>
         </div>
@@ -101,37 +103,35 @@ $conn->close();
             echo "<div class='alert alert-danger'>Erreur de récupération des produits: " . mysqli_error($conn) . "</div>";
         }
 
-        // Check if form is submitted
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $id = $_POST['id'];
-            $name = $_POST['name'];
-            $description = $_POST['description'];
-            $se_craft = $_POST['se_craft'];
-            $photo = $_FILES['photo']['name'];
+            $id = mysqli_real_escape_string($conn, $_POST['id']);
+            $name = mysqli_real_escape_string($conn, $_POST['name']);
+            $description = mysqli_real_escape_string($conn, $_POST['description']);
+            $se_craft = mysqli_real_escape_string($conn, $_POST['se_craft']);
 
-            // Handle file upload
-            if ($photo) {
+            $photo = null;
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
                 $target_dir = "uploads/";
-                $target_file = $target_dir . basename($photo);
-                if (!move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
-                    echo "<div class='alert alert-danger'>Erreur de téléchargement de la photo.</div>";
-                }
-            } else {
-                // If no new photo is uploaded, keep the existing photo
-                $sql = "SELECT photo FROM NG_Craft WHERE id='$id'";
-                $result = mysqli_query($conn, $sql);
-                if ($result) {
-                    $row = mysqli_fetch_assoc($result);
-                    $photo = $row['photo'];
+                $target_file = $target_dir . basename($_FILES['photo']['name']);
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $target_file)) {
+                    $photo = $target_file;
+                } else {
+                    echo "<div class='alert alert-danger'>Erreur lors du téléchargement de la photo.</div>";
                 }
             }
 
-            // Update product in the database
-            $sql = "UPDATE NG_Craft SET title='$name', description='$description', se_craft='$se_craft', photo='$photo' WHERE id='$id'";
-            if (mysqli_query($conn, $sql)) {
-                echo "<div class='alert alert-success'>Produit mis à jour avec succès.</div>";
+            if ($photo) {
+                $sql = "UPDATE NG_Craft SET title='$name', description='$description', craft_type='$se_craft', image='$photo' WHERE id='$id'";
             } else {
-                echo "<div class='alert alert-danger'>Erreur de mise à jour: " . mysqli_error($conn) . "</div>";
+                $sql = "UPDATE NG_Craft SET title='$name', description='$description', craft_type='$se_craft' WHERE id='$id'";
+            }
+
+            if (mysqli_query($conn, $sql)) {
+                sleep(1);
+                header("Location: edit.php");
+                exit();
+            } else {
+                echo "<div class='alert alert-danger'>Erreur de mise à jour : " . mysqli_error($conn) . "</div>";
             }
         }
         ?>
@@ -141,7 +141,16 @@ $conn->close();
                     <div class="card mb-4">
                         <div class="card-body">
                             <h5 class="card-title"><?php echo $product['title']; ?></h5>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#editModal" data-id="<?php echo $product['id']; ?>" data-title="<?php echo $product['title']; ?>" data-description="<?php echo $product['description']; ?>" data-se_craft="<?php echo $product['se_craft']; ?>" data-photo="<?php echo $product['photo']; ?>">Modifier</button>
+                            <button class="btn btn-primary"
+                                data-toggle="modal"
+                                data-target="#editModal"
+                                data-id="<?php echo $product['id']; ?>"
+                                data-title="<?php echo $product['title']; ?>"
+                                data-description="<?php echo $product['description']; ?>"
+                                data-craft_type="<?php echo $product['craft_type']; ?>"
+                                data-photo="<?php echo $product['image']; ?>">
+                                Modifier
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -192,24 +201,25 @@ $conn->close();
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        $('#editModal').on('show.bs.modal', function (event) {
+        $('#editModal').on('show.bs.modal', function(event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
             var title = button.data('title');
             var description = button.data('description');
-            var se_craft = button.data('se_craft');
+            var craft_type = button.data('craft_type');
             var photo = button.data('photo');
 
             var modal = $(this);
             modal.find('#product-id').val(id);
             modal.find('#product-name').val(title);
             modal.find('#product-description').val(description);
-            modal.find('#product-se_craft').val(se_craft);
-            modal.find('#product-photo').val(photo);
+            modal.find('#product-se_craft').val(craft_type);
+            // modal.find('#product-photo').val(photo);
 
             // Modifier le titre de la page
             document.title = "Modifier Produit - " + title;
         });
     </script>
 </body>
+
 </html>

@@ -8,10 +8,16 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['uname'];
-    $password = $_POST['pass'];
+    $username = trim($_POST['uname']);
+    $password = trim($_POST['pass']);
 
-    $sql = "SELECT id, username, password, Staff_sute, Dev_site, Admin FROM users WHERE username = ?";
+    if (empty($username) || empty($password)) {
+        $_SESSION['error'] = "Veuillez remplir tous les champs.";
+        header("Location: login.php");
+        exit();
+    }
+
+    $sql = "SELECT id, username, password, admin FROM users WHERE username = ?";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param("s", $param_username);
         $param_username = $username;
@@ -20,15 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->store_result();
 
             if ($stmt->num_rows == 1) {
-                $stmt->bind_result($id, $username, $hashed_password, $Staff_sute, $Dev_site, $Admin);
+                $stmt->bind_result($id, $username, $hashed_password, $admin);
                 if ($stmt->fetch()) {
                     if (password_verify($password, $hashed_password)) {
                         $_SESSION['loggedin'] = true;
                         $_SESSION['id'] = $id;
                         $_SESSION['username'] = $username;
-                        $_SESSION['Staff_sute'] = $Staff_sute;
-                        $_SESSION['Dev_site'] = $Dev_site;
-                        $_SESSION['Admin'] = $Admin;
+                        $_SESSION['admin'] = $admin;
 
                         $_SESSION['message'] = "Connexion réussie!";
                         $_SESSION['message_type'] = "success";
@@ -41,18 +45,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 }
             } else {
-                $_SESSION['error'] = "Aucun compte trouvé avec ce nom d'utilisateur.";
+                $_SESSION['error'] = "Nom d'utilisateur ou mot de passe incorrect.";
                 header("Location: login.php");
                 exit();
             }
         } else {
-            $_SESSION['error'] = "Oops! Quelque chose a mal tourné. Veuillez réessayer plus tard.";
+            $_SESSION['error'] = "Erreur interne lors de la vérification des informations.";
             header("Location: login.php");
             exit();
         }
 
         $stmt->close();
+    } else {
+        $_SESSION['error'] = "Erreur interne lors de la connexion à la base de données.";
+        header("Location: login.php");
+        exit();
     }
+
     $mysqli->close();
 }
 ?>

@@ -1,21 +1,23 @@
 <?php
-require_once 'config.php';
+session_start();
+require_once 'config.php'; 
 
 $userName = null;
 $isPrime = false;
+
 if (isset($_SESSION['id'])) {
-    $sql = 'SELECT fname, is_prime FROM NG_Update.users WHERE id = :id';
-    $query = $db->prepare($sql);
-    $query->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
-    $query->execute();
-    $user = $query->fetch(PDO::FETCH_ASSOC);
+    $sql = 'SELECT fname, is_prime FROM users WHERE id = ?';
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $_SESSION['id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
     if ($user) {
         $userName = $user['fname'];
         $isPrime = (bool)$user['is_prime'];
     }
-}
-
-if (!isset($_SESSION['id'])) {
+    $stmt->close();
+} else {
     $_SESSION['erreur'] = "Vous devez être connecté pour accéder à cette page";
     header('Location: index.php');
     exit;
@@ -24,11 +26,11 @@ if (!isset($_SESSION['id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $message = $_POST['update'];
     $userId = $_SESSION['id'];
-    $sql = 'INSERT INTO NG_Update.updates (user_id, message, created_at, vote) VALUES (:user_id, :message, NOW(), 0)';
-    $query = $db->prepare($sql);
-    $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
-    $query->bindValue(':message', $message, PDO::PARAM_STR);
-    $query->execute();
+    $sql = 'INSERT INTO updates (user_id, message, created_at, vote) VALUES (?, ?, NOW(), 0)';
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('is', $userId, $message);
+    $stmt->execute();
+    $stmt->close();
     header('Location: admin.php');
     exit;
 }
@@ -38,41 +40,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vote'])) {
     $updateId = $_POST['update_id'];
     $userId = $_SESSION['id'];
 
-    // Check if the user has already voted for this update
-    $sql = 'SELECT vote FROM NG_Update.updates WHERE user_id = :user_id AND id = :update_id';
-    $query = $db->prepare($sql);
-    $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
-    $query->bindValue(':update_id', $updateId, PDO::PARAM_INT);
-    $query->execute();
-    $existingVote = $query->fetchColumn();
+    // Vérifier si l'utilisateur a déjà voté pour cette mise à jour
+    $sql = 'SELECT vote FROM updates WHERE id = ?';
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param('i', $updateId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $existingVote = $result->fetch_assoc()['vote'] ?? null;
+    $stmt->close();
 
-    if ($existingVote === false) {
-        // Insert the vote if the user hasn't voted yet
-        $sql = 'UPDATE NG_Update.updates SET vote = vote + :vote WHERE id = :update_id';
-        $query = $db->prepare($sql);
-        $query->bindValue(':vote', $vote, PDO::PARAM_INT);
-        $query->bindValue(':update_id', $updateId, PDO::PARAM_INT);
-        $query->execute();
+    if ($existingVote === null) {
+        // Si pas encore voté, mettre à jour le compteur de votes
+        $sql = 'UPDATE updates SET vote = vote + ? WHERE id = ?';
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('ii', $vote, $updateId);
+        $stmt->execute();
+        $stmt->close();
     } elseif ($existingVote != $vote) {
-        // Update the vote if the user changes their vote
-        $sql = 'UPDATE NG_Update.updates SET vote = vote + :vote - :existing_vote WHERE id = :update_id';
-        $query = $db->prepare($sql);
-        $query->bindValue(':vote', $vote, PDO::PARAM_INT);
-        $query->bindValue(':existing_vote', $existingVote, PDO::PARAM_INT);
-        $query->bindValue(':update_id', $updateId, PDO::PARAM_INT);
-        $query->execute();
+        // Mettre à jour le vote si l'utilisateur change d'avis
+        $sql = 'UPDATE updates SET vote = vote + ? - ? WHERE id = ?';
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param('iii', $vote, $existingVote, $updateId);
+        $stmt->execute();
+        $stmt->close();
     }
 }
 
-// Fetch patch notes
-$sql = 'SELECT updates.id, updates.message, updates.created_at, users.username, 
-        updates.vote as votes 
-        FROM NG_Update.updates 
-        JOIN NG_Update.users ON updates.user_id = users.id 
+// Récupération des patch notes
+$sql = 'SELECT updates.id, updates.message, updates.created_at, users.username, updates.vote 
+        FROM updates 
+        JOIN users ON updates.user_id = users.id 
         ORDER BY updates.created_at DESC';
-$query = $db->prepare($sql);
-$query->execute();
-$patchNotes = $query->fetchAll(PDO::FETCH_ASSOC);
+$result = $mysqli->query($sql);
+$patchNotes = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -179,7 +179,7 @@ $patchNotes = $query->fetchAll(PDO::FETCH_ASSOC);
     </style>
 </head>
 <body>
-    <a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
+<a href="index.php" class="home-button"><i class="fas fa-home"></i></a>
     <div class="container mt-5">
         <h1 class="centered-bold">Patch Notes</h1>
         <div class="patch-notes">
@@ -205,7 +205,7 @@ $patchNotes = $query->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="update_id" value="<?php echo $note['id']; ?>">
                                 <button type="submit" name="vote" value="1" class="btn btn-success"><i class="fas fa-arrow-up"></i></button>
                             </form>
-                            <span>Votes: <?php echo $note['votes']; ?></span>
+                            <span>Votes: <?php echo $note['vote']; ?></span>
                             <form method="post" style="display:inline;">
                                 <input type="hidden" name="update_id" value="<?php echo $note['id']; ?>">
                                 <button type="submit" name="vote" value="-1" class="btn btn-danger"><i class="fas fa-arrow-down"></i></button>

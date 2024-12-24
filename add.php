@@ -12,12 +12,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (!isset($_SESSION['nom'])) {
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-$nom = $_SESSION['nom'];
+$nom = $_SESSION['username'];
 $sql = "SELECT * FROM NG_Pays WHERE Nom='$nom'";
 $result = $conn->query($sql);
 

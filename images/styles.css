@@ -8,14 +8,17 @@ body {
     background-size: cover; /* Ensure the image covers the entire background */
     background-position: center; /* Center the background image */
     background-attachment: fixed; /* Make the background image fixed */
-    height: 100%; /* Full page height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
 }
 
-
 .navbar {
-    background-color: #007bff; /* Vibrant blue */
+    background-color: #007bff; /* Changed to a vibrant blue */
     color: #fff;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem; /* Reduced padding to make the navbar less tall */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     width: 100%;
@@ -50,31 +53,19 @@ body {
     text-decoration: underline;
 }
 
-.main-container {
-    padding-top: 6rem;
-    padding-left: 2rem;
-    padding-right: 3rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 1500px;
-    margin: 0 auto;
-}
-
 .title-container {
-    background-color: #fff;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 2rem;
+    background-color: #fff; /* White background */
+    padding: 1rem 2rem; /* Padding for spacing */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Centered text */
 }
 
 h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: red;
+    color: red; /* Changed to red */
+    text-align: center; /* Centered the heading */
 }
 
 h2 {

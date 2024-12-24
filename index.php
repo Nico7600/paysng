@@ -77,7 +77,9 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
                                 <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="admin.php"><i class="fas fa-user-shield"></i> Admin</a>
+                                <?php if ($_SESSION['Staff_site'] == 1 || $_SESSION['Dev_site'] == 1 || $_SESSION['Admin'] == 1): ?>
+                                    <a class="dropdown-item admin" href="admin.php"><i class="fas fa-user-shield"></i> Admin</a>
+                                <?php endif; ?>
                                 <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             </div>
                         <?php else: ?>
@@ -94,7 +96,7 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
             </div>
         </div>
     </nav>
-    <div class="container mt-5">
+    <div class="main-container mt-5">
         <?php 
         if (!empty($message)) {
             echo '<div class="alert alert-' . $message_type . '">' . $message . '</div>';
