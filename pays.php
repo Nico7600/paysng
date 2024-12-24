@@ -68,10 +68,7 @@ include 'navbar.php';
                         <a class="nav-link" href="#">Offi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
+                        <a class="nav-link" href="#"><?php echo $_SESSION['username']; ?></a>
                     </li>
                 </ul>
             </div>

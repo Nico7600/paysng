@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $sql = "SELECT id, username, password, admin FROM users WHERE username = ?";
+    $sql = "SELECT id, Nom, MDP, admin FROM NG_Pays WHERE Nom = ?";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param("s", $param_username);
         $param_username = $username;

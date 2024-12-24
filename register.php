@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['mdp'];
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    $sql = "INSERT INTO NG_Pays (Nom, MDP) VALUES (?, ?)";
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param("ss", $param_username, $param_password);
         $param_username = $username;

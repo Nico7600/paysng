@@ -24,9 +24,7 @@
                             <i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <?php if ($_SESSION['Staff_site'] == 1 || $_SESSION['Dev_site'] == 1 || $_SESSION['Admin'] == 1): ?>
-                                <a class="dropdown-item admin" href="admin.php" style="color: blue;"><i class="fas fa-user-shield"></i> Admin</a>
-                            <?php endif; ?>
+                            <a class="dropdown-item admin" href="admin.php" style="color: blue;"><i class="fas fa-user-shield"></i> Admin</a>
                             <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     <?php else: ?>
