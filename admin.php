@@ -197,31 +197,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['change_grade'])) {
                                             <input type='hidden' name='username' value='{$row['Nom']}'> 
                                             <input type='hidden' name='role' value='Recrut'>
                                             <input type='hidden' name='current_value' value='{$row['Recrut']}'> 
-                                            <button type='submit' name='toggle_role' class='btn " . ($row['Recrut'] ? 'btn-info' : 'btn-secondary') . " btn-sm'>Recrut (" . ($row['Recrut'] ? 'Actif' : 'Inactif') . ")</button>
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Recrut'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Recrut (" . ($row['Recrut'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
                                             <input type='hidden' name='username' value='{$row['Nom']}'> 
                                             <input type='hidden' name='role' value='Membre'>
                                             <input type='hidden' name='current_value' value='{$row['Membre']}'> 
-                                            <button type='submit' name='toggle_role' class='btn " . ($row['Membre'] ? 'btn-warning' : 'btn-secondary') . " btn-sm'>Membre (" . ($row['Membre'] ? 'Actif' : 'Inactif') . ")</button>
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Membre'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Membre (" . ($row['Membre'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
                                             <input type='hidden' name='username' value='{$row['Nom']}'> 
                                             <input type='hidden' name='role' value='Officier'>
                                             <input type='hidden' name='current_value' value='{$row['Officier']}'> 
-                                            <button type='submit' name='toggle_role' class='btn " . ($row['Officier'] ? 'btn-danger' : 'btn-secondary') . " btn-sm'>Officier (" . ($row['Officier'] ? 'Actif' : 'Inactif') . ")</button>
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Officier'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Officier (" . ($row['Officier'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                         <form method='post' action='' class='d-inline'>
                                             <input type='hidden' name='username' value='{$row['Nom']}'> 
                                             <input type='hidden' name='role' value='Chef'>
                                             <input type='hidden' name='current_value' value='{$row['Chef']}'> 
-                                            <button type='submit' name='toggle_role' class='btn " . ($row['Chef'] ? 'btn-primary' : 'btn-secondary') . " btn-sm'>Chef (" . ($row['Chef'] ? 'Actif' : 'Inactif') . ")</button>
+                                            <button type='submit' name='toggle_role' class='btn " . ($row['Chef'] ? 'btn-success' : 'btn-danger') . " btn-sm'>Chef (" . ($row['Chef'] ? 'Actif' : 'Inactif') . ")</button>
                                         </form>
                                     </td>
                                   </tr>";
                         }
                     } else {
                         echo "<tr><td colspan='5'>Aucun utilisateur trouvé</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="container mt-4">
+            <h2>Derniers Inscrits</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom d'utilisateur</th>
+                        <th>Date d'inscription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $latest_users_sql = "SELECT username, created_at FROM users ORDER BY created_at DESC LIMIT 10";
+                    $latest_users_result = $conn->query($latest_users_sql);
+                    if ($latest_users_result->num_rows > 0) {
+                        while ($row = $latest_users_result->fetch_assoc()) {
+                            echo "<tr><td>{$row['username']}</td><td>{$row['created_at']}</td></tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='2'>Aucun utilisateur trouvé</td></tr>";
                     }
                     ?>
                 </tbody>
