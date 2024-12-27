@@ -23,7 +23,7 @@ $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    if ($row['Chef'] != 1 && $row['Officier'] != 1 && $row['Membre'] != 1 && $row['Recrut'] != 1) {
+    if ($row['Chef'] != 1 && $row['Officier'] != 1 && $row['Membre'] != 1 && $row['Recrut'] != 1 && $row['Admin'] != 1) {
         echo "Access denied.";
         exit();
     }
@@ -64,7 +64,9 @@ $conn->close();
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">
+            <span style="color: red;">Indonesie</span><span style="color: white;"> privée</span>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -74,7 +76,7 @@ $conn->close();
                     <a class="nav-link" href="craft.php"><i class="fas fa-hammer"></i> Craft</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="craft_pays.php"><i class="fas fa-globe"></i> Craft Pays</a>
+                    <a class="nav-link" href="craft_pays.php"><i class="fas fa-globe"></i> Craft Pays</a> <!-- Ensure this link is correct -->
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="gestion_offi.php"><i class="fas fa-cogs"></i> Gestion Offi</a>
@@ -84,9 +86,6 @@ $conn->close();
                 <?php if (isset($_SESSION['username'])): ?>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fas fa-user"></i> <?php echo $_SESSION['username']; ?></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
                 </li>
                 <?php else: ?>
                 <li class="nav-item">
